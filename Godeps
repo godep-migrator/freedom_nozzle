@@ -1,0 +1,18 @@
+{
+	"ImportPath": "github.com/cobraextreme/freedom_nozzle",
+	"GoVersion": "go1.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/garyburd/redigo/redis",
+			"Rev": "1c7841955920910958c71b1cc1a03f628267d468"
+		},
+		{
+			"ImportPath": "github.com/streadway/amqp",
+			"Rev": "bbc42d384b424cc08732fb935c742fa4fa9e361b"
+		},
+		{
+			"ImportPath": "github.com/zenazn/goji",
+			"Rev": "32da78b2dfeb2f5353e3b14a54a1b30d356e979c"
+		}
+	]
+}
