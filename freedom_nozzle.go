@@ -37,7 +37,7 @@ func handleOutboundMessage(c web.C, w http.ResponseWriter, r *http.Request) {
 	notificationIds := []string{}
 
 	for _, n := range notifications {
-		isNew, redisErr := newNotificationId(n.Id)
+		isNew, redisErr := newNotificationID(n.Id)
 		err = redisErr
 
 		if isNew {

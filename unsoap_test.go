@@ -58,9 +58,9 @@ func Test_UnsoapMultipleNotificationValues(t *testing.T) {
 		t.Errorf("Expected first notification id to be 04lo00000x, got: %s", firstResult.Id)
 	}
 
-	firstResultSObjId := firstResult.SObject.Fields["Id"]
-	if firstResultSObjId != "003o0000x" {
-		t.Errorf("Expected first sobject id to be 003o0000x, got: %s", firstResultSObjId)
+	firstResultSObjID := firstResult.SObject.Fields["Id"]
+	if firstResultSObjID != "003o0000x" {
+		t.Errorf("Expected first sobject id to be 003o0000x, got: %s", firstResultSObjID)
 	}
 
 	secondResult := result[1]
@@ -68,9 +68,9 @@ func Test_UnsoapMultipleNotificationValues(t *testing.T) {
 		t.Errorf("Expected second notification id to be 04lo00000y, got: %s", secondResult.Id)
 	}
 
-	secondResultSObjId := secondResult.SObject.Fields["Id"]
-	if secondResultSObjId != "003o0000y" {
-		t.Errorf("Expected second sobject id to be 003o0000y, got: %s", secondResultSObjId)
+	secondResultSObjID := secondResult.SObject.Fields["Id"]
+	if secondResultSObjID != "003o0000y" {
+		t.Errorf("Expected second sobject id to be 003o0000y, got: %s", secondResultSObjID)
 	}
 }
 

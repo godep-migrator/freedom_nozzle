@@ -28,7 +28,7 @@ func testRedisPool(pool *redis.Pool) {
 	_, _ = c.Do("PING")
 }
 
-func newNotificationId(id string) (isNew bool, err error) {
+func newNotificationID(id string) (isNew bool, err error) {
 	conn := redisPool.Get()
 	defer conn.Close()
 
@@ -43,11 +43,11 @@ func newNotificationId(id string) (isNew bool, err error) {
 	}
 
 	//store this notification id for 25 hours, salesforce may try to resend for up to 24 hours
-	conn.Do("SET", key, 1, "EX", 90000) 
+	conn.Do("SET", key, 1, "EX", 90000)
 	return true, nil
 }
 
-func clearNotificationId(id string) (err error) {
+func clearNotificationID(id string) (err error) {
 	conn := redisPool.Get()
 	defer conn.Close()
 
