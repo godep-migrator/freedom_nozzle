@@ -33,13 +33,13 @@ func newRabbitMQConnection(server string) *amqp.Connection {
 	return connection
 }
 
-func publishMessage(notification notification) (err error) {
-	msg, err := createMessage(notification)
+func publishMessage(n notification) (err error) {
+	msg, err := createMessage(n)
 	if err != nil {
 		return
 	}
 
-	key, err := createKey(notification)
+	key, err := createKey(n)
 	if err != nil {
 		return
 	}
@@ -48,8 +48,8 @@ func publishMessage(notification notification) (err error) {
 	return
 }
 
-func createMessage(notification notification) (msg amqp.Publishing, err error) {
-	json, err := json.Marshal(notification)
+func createMessage(n notification) (msg amqp.Publishing, err error) {
+	json, err := json.Marshal(n)
 	if err != nil {
 		return amqp.Publishing{}, err
 	}
@@ -64,15 +64,15 @@ func createMessage(notification notification) (msg amqp.Publishing, err error) {
 	return
 }
 
-func createKey(notification notification) (key string, err error) {
-	objectName := notification.SObject.Type
+func createKey(n notification) (key string, err error) {
+	objectName := n.SObject.Type
 	if len(objectName) == 0 {
 		return "", fmt.Errorf("could not create routing key")
 	}
 
 	key = strings.ToLower(objectName)
 
-	objectAction := objectAction(notification)
+	objectAction := objectAction(n)
 	if len(objectAction) > 0 {
 		key = key + "." + objectAction
 	}
@@ -80,9 +80,9 @@ func createKey(notification notification) (key string, err error) {
 	return key, nil
 }
 
-func objectAction(notification notification) (action string) {
-	objectCreateTime, createErr := parseSalesforceTime(notification.SObject.Fields["CreatedDate"])
-	objectModifiedTime, modifiedErr := parseSalesforceTime(notification.SObject.Fields["LastModifiedDate"])
+func objectAction(n notification) (action string) {
+	objectCreateTime, createErr := parseSalesforceTime(n.SObject.Fields["CreatedDate"])
+	objectModifiedTime, modifiedErr := parseSalesforceTime(n.SObject.Fields["LastModifiedDate"])
 
 	switch {
 	case createErr != nil || modifiedErr != nil:

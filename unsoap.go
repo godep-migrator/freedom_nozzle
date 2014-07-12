@@ -36,18 +36,18 @@ type sObject struct {
 	Fields        map[string]interface{}
 }
 
-func (sobj *sObject) findType() string {
-	return strings.TrimPrefix(sobj.TypeAttr, "sf:")
+func (s *sObject) findType() string {
+	return strings.TrimPrefix(s.TypeAttr, "sf:")
 }
 
-func (sobj *sObject) populateFieldValues() {
-	sobj.Type = sobj.findType()
+func (s *sObject) populateFieldValues() {
+	s.Type = s.findType()
 
-	sobj.Fields = make(map[string]interface{})
-	for _, field := range sobj.SObjectFields {
+	s.Fields = make(map[string]interface{})
+	for _, field := range s.SObjectFields {
 		fieldName := field.XMLName.Local
 		fieldVal := field.Value
-		sobj.Fields[fieldName] = fieldVal
+		s.Fields[fieldName] = fieldVal
 	}
 }
 
@@ -56,9 +56,9 @@ type sObjectField struct {
 	Value   string `xml:",chardata"`
 }
 
-func unsoap(soapMessage []byte) (notifications []notification, err error) {
+func unsoap(soap []byte) (notifications []notification, err error) {
 	msg := &message{}
-	xml.Unmarshal([]byte(soapMessage), msg)
+	xml.Unmarshal([]byte(soap), msg)
 
 	if len(msg.Notifications.NotificationList) < 1 {
 		return nil, fmt.Errorf("message contains no notifications")
