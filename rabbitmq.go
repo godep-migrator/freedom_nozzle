@@ -67,7 +67,7 @@ func createMessage(notification Notification) (msg amqp.Publishing, err error) {
 func createKey(notification Notification) (key string, err error) {
 	objectName := notification.SObject.Type
 	if len(objectName) == 0 {
-		return "", fmt.Errorf("Could not create routing key")
+		return "", fmt.Errorf("could not create routing key")
 	}
 
 	key = strings.ToLower(objectName)
@@ -97,7 +97,7 @@ func objectAction(notification Notification) (action string) {
 
 func parseSalesforceTime(timeField interface{}) (t time.Time, err error) {
 	if timeField == nil {
-		return time.Now(), fmt.Errorf("No time found")
+		return time.Now(), fmt.Errorf("no time found")
 	}
 
 	t, err = time.Parse(time.RFC3339, timeField.(string))

@@ -61,7 +61,7 @@ func Unsoap(soapMessage []byte) (notifications []Notification, err error) {
 	xml.Unmarshal([]byte(soapMessage), msg)
 
 	if len(msg.Notifications.NotificationList) < 1 {
-		return nil, fmt.Errorf("Message contains no notifications")
+		return nil, fmt.Errorf("message contains no notifications")
 	}
 
 	n := msg.Notifications
