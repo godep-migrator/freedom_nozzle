@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func Test_UnsoapNotificationValues(t *testing.T) {
-	result, err := Unsoap([]byte(singleNotificationMessage))
+	result, err := unsoap([]byte(singleNotificationMessage))
 	if err != nil {
 		t.Fatalf("Can not unsoap message to test values: %s", err)
 	}
@@ -24,7 +24,7 @@ func Test_UnsoapNotificationValues(t *testing.T) {
 }
 
 func Test_UnsoapSObjectValues(t *testing.T) {
-	result, err := Unsoap([]byte(singleNotificationMessage))
+	result, err := unsoap([]byte(singleNotificationMessage))
 	if err != nil {
 		t.Fatalf("Can not unsoap message to test values: %s", err)
 	}
@@ -41,14 +41,14 @@ func Test_UnsoapSObjectValues(t *testing.T) {
 }
 
 func Test_UnsoapMultipleNotifications(t *testing.T) {
-	result, _ := Unsoap([]byte(multipleNotificationMessage))
+	result, _ := unsoap([]byte(multipleNotificationMessage))
 	if len(result) != 2 {
 		t.Errorf("Expected to find two notifications, found %v", len(result))
 	}
 }
 
 func Test_UnsoapMultipleNotificationValues(t *testing.T) {
-	result, _ := Unsoap([]byte(multipleNotificationMessage))
+	result, _ := unsoap([]byte(multipleNotificationMessage))
 	if len(result) != 2 {
 		t.Fatalf("Expected to find two notifications, found %v", len(result))
 	}

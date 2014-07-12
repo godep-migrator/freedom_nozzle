@@ -33,7 +33,7 @@ func respond(c web.C, w http.ResponseWriter, err error) {
 
 func handleOutboundMessage(c web.C, w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
-	notifications, err := Unsoap(body)
+	notifications, err := unsoap(body)
 	notificationIds := []string{}
 
 	for _, n := range notifications {

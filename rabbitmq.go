@@ -33,7 +33,7 @@ func newRabbitMQConnection(server string) *amqp.Connection {
 	return connection
 }
 
-func publishMessage(notification Notification) (err error) {
+func publishMessage(notification notification) (err error) {
 	msg, err := createMessage(notification)
 	if err != nil {
 		return
@@ -48,7 +48,7 @@ func publishMessage(notification Notification) (err error) {
 	return
 }
 
-func createMessage(notification Notification) (msg amqp.Publishing, err error) {
+func createMessage(notification notification) (msg amqp.Publishing, err error) {
 	json, err := json.Marshal(notification)
 	if err != nil {
 		return amqp.Publishing{}, err
@@ -64,7 +64,7 @@ func createMessage(notification Notification) (msg amqp.Publishing, err error) {
 	return
 }
 
-func createKey(notification Notification) (key string, err error) {
+func createKey(notification notification) (key string, err error) {
 	objectName := notification.SObject.Type
 	if len(objectName) == 0 {
 		return "", fmt.Errorf("could not create routing key")
@@ -80,7 +80,7 @@ func createKey(notification Notification) (key string, err error) {
 	return key, nil
 }
 
-func objectAction(notification Notification) (action string) {
+func objectAction(notification notification) (action string) {
 	objectCreateTime, createErr := parseSalesforceTime(notification.SObject.Fields["CreatedDate"])
 	objectModifiedTime, modifiedErr := parseSalesforceTime(notification.SObject.Fields["LastModifiedDate"])
 

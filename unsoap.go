@@ -6,41 +6,41 @@ import (
 	"strings"
 )
 
-type Message struct {
-	Notifications Notifications `xml:"Body>notifications"`
+type message struct {
+	Notifications notifications `xml:"Body>notifications"`
 }
 
-type Notifications struct {
+type notifications struct {
 	OrganizationId   string
 	ActionId         string
 	SessionId        string
 	EnterpriseUrl    string
 	PartnerUrl       string
-	NotificationList []Notification `xml:"Notification"`
+	NotificationList []notification `xml:"Notification"`
 }
 
-type Notification struct {
+type notification struct {
 	Id             string
 	OrganizationId string
 	ActionId       string
 	SessionId      string
 	EnterpriseUrl  string
 	PartnerUrl     string
-	SObject        SObject `xml:"sObject"`
+	SObject        sObject `xml:"sObject"`
 }
 
-type SObject struct {
+type sObject struct {
 	TypeAttr      string `xml:"type,attr" json:"-"`
 	Type          string
-	SObjectFields []SObjectField `xml:",any" json:"-"`
+	SObjectFields []sObjectField `xml:",any" json:"-"`
 	Fields        map[string]interface{}
 }
 
-func (sobj *SObject) findType() string {
+func (sobj *sObject) findType() string {
 	return strings.TrimPrefix(sobj.TypeAttr, "sf:")
 }
 
-func (sobj *SObject) populateFieldValues() {
+func (sobj *sObject) populateFieldValues() {
 	sobj.Type = sobj.findType()
 
 	sobj.Fields = make(map[string]interface{})
@@ -51,13 +51,13 @@ func (sobj *SObject) populateFieldValues() {
 	}
 }
 
-type SObjectField struct {
+type sObjectField struct {
 	XMLName xml.Name
 	Value   string `xml:",chardata"`
 }
 
-func Unsoap(soapMessage []byte) (notifications []Notification, err error) {
-	msg := &Message{}
+func unsoap(soapMessage []byte) (notifications []notification, err error) {
+	msg := &message{}
 	xml.Unmarshal([]byte(soapMessage), msg)
 
 	if len(msg.Notifications.NotificationList) < 1 {

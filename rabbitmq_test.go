@@ -12,9 +12,9 @@ import (
 var testExchange = "testing_freedom_nozzle_exchange"
 var testQueue = "testing_freedom_nozzle_queue"
 
-var testNotification = Notification{
+var testNotification = notification{
 	Id: "testId",
-	SObject: SObject{
+	SObject: sObject{
 		Type: "testtype",
 	},
 }
@@ -34,7 +34,7 @@ func Test_PublishMessage(t *testing.T) {
 	}
 
 	delivery := <-out
-	notification := &Notification{}
+	notification := &notification{}
 	err = json.Unmarshal(delivery.Body, notification)
 	if err != nil {
 		t.Fatalf("Could not retreive test notification from RabbitMQ")
