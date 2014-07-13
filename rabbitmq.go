@@ -2,9 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/streadway/amqp"
@@ -39,7 +37,7 @@ func publishMessage(n notification) (err error) {
 		return
 	}
 
-	key, err := createKey(n)
+	key, err := n.routingKey()
 	if err != nil {
 		return
 	}
@@ -61,45 +59,5 @@ func createMessage(n notification) (msg amqp.Publishing, err error) {
 		Body:         json,
 	}
 
-	return
-}
-
-func createKey(n notification) (key string, err error) {
-	objectName := n.SObject.Type
-	if len(objectName) == 0 {
-		return "", fmt.Errorf("could not create routing key")
-	}
-
-	key = strings.ToLower(objectName)
-
-	objectAction := objectAction(n)
-	if len(objectAction) > 0 {
-		key = key + "." + objectAction
-	}
-
-	return key, nil
-}
-
-func objectAction(n notification) (action string) {
-	objectCreateTime, createErr := parseSalesforceTime(n.SObject.Fields["CreatedDate"])
-	objectModifiedTime, modifiedErr := parseSalesforceTime(n.SObject.Fields["LastModifiedDate"])
-
-	switch {
-	case createErr != nil || modifiedErr != nil:
-		return ""
-	case objectModifiedTime.Equal(objectCreateTime):
-		return "create"
-	case objectModifiedTime.After(objectCreateTime):
-		return "update"
-	}
-	return ""
-}
-
-func parseSalesforceTime(timeField interface{}) (t time.Time, err error) {
-	if timeField == nil {
-		return time.Now(), fmt.Errorf("no time found")
-	}
-
-	t, err = time.Parse(time.RFC3339, timeField.(string))
 	return
 }

@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func Test_UnsoapNotificationValues(t *testing.T) {
 	result, err := unsoap([]byte(singleNotificationMessage))
@@ -71,6 +74,61 @@ func Test_UnsoapMultipleNotificationValues(t *testing.T) {
 	secondResultSObjID := secondResult.SObject.Fields["Id"]
 	if secondResultSObjID != "003o0000y" {
 		t.Errorf("Expected second sobject id to be 003o0000y, got: %s", secondResultSObjID)
+	}
+}
+
+func Test_RoutingKeyWithoutDates(t *testing.T) {
+	key, err := testNotification.routingKey()
+	if err != nil {
+		t.Errorf("Error creating routing key: %s", err)
+	}
+
+	if key != "testtype" {
+		t.Errorf("Expected routing key testtype, got: %v", key)
+	}
+}
+
+func Test_RoutingKeyWithDates(t *testing.T) {
+	now := time.Now().Format(time.RFC3339)
+	dur := time.Duration(-1 * time.Hour)
+	before := time.Now().Add(dur).Format(time.RFC3339)
+
+	//when CreatedDate and LastModifiedDate are equal should have key *.created
+	testNotification.SObject.Fields = make(map[string]interface{})
+	testNotification.SObject.Fields["CreatedDate"] = now
+	testNotification.SObject.Fields["LastModifiedDate"] = now
+
+	key, err := testNotification.routingKey()
+	if err != nil {
+		t.Errorf("Error creating RabbitMQ routing key: %s", err)
+	}
+
+	if key != "testtype.create" {
+		t.Errorf("Expected routing key testtype.create, got: %v", key)
+	}
+
+	//when CreatedDate before LastModifiedDate should have key *.update
+	testNotification.SObject.Fields["CreatedDate"] = before
+
+	key, err = testNotification.routingKey()
+	if err != nil {
+		t.Errorf("Error creating RabbitMQ routing key: %s", err)
+	}
+
+	if key != "testtype.update" {
+		t.Errorf("Expected routing key testtype.update, got: %v", key)
+	}
+
+	//when one date present and other missing should have just objecttype key
+	delete(testNotification.SObject.Fields, "LastModifiedDate")
+
+	key, err = testNotification.routingKey()
+	if err != nil {
+		t.Errorf("Error creating RabbitMQ routing key: %s", err)
+	}
+
+	if key != "testtype" {
+		t.Errorf("Expected routing key testtype, got: %v", key)
 	}
 }
 

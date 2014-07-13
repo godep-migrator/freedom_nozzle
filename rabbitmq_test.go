@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/streadway/amqp"
 )
@@ -55,61 +54,6 @@ func Test_CreateMessage(t *testing.T) {
 
 	if msg.ContentType != "application/json" {
 		t.Errorf("Expected message content type application/json, got: %v", msg.ContentType)
-	}
-}
-
-func Test_CreateKeyWithoutDates(t *testing.T) {
-	key, err := createKey(testNotification)
-	if err != nil {
-		t.Errorf("Error creating routing key: %s", err)
-	}
-
-	if key != "testtype" {
-		t.Errorf("Expected routing key testtype, got: %v", key)
-	}
-}
-
-func Test_CreateKeyWithDates(t *testing.T) {
-	now := time.Now().Format(time.RFC3339)
-	dur := time.Duration(-1 * time.Hour)
-	before := time.Now().Add(dur).Format(time.RFC3339)
-
-	//when CreatedDate and LastModifiedDate are equal should have key *.created
-	testNotification.SObject.Fields = make(map[string]interface{})
-	testNotification.SObject.Fields["CreatedDate"] = now
-	testNotification.SObject.Fields["LastModifiedDate"] = now
-
-	key, err := createKey(testNotification)
-	if err != nil {
-		t.Errorf("Error creating RabbitMQ routing key: %s", err)
-	}
-
-	if key != "testtype.create" {
-		t.Errorf("Expected routing key testtype.create, got: %v", key)
-	}
-
-	//when CreatedDate before LastModifiedDate should have key *.update
-	testNotification.SObject.Fields["CreatedDate"] = before
-
-	key, err = createKey(testNotification)
-	if err != nil {
-		t.Errorf("Error creating RabbitMQ routing key: %s", err)
-	}
-
-	if key != "testtype.update" {
-		t.Errorf("Expected routing key testtype.update, got: %v", key)
-	}
-
-	//when one date present and other missing should have just objecttype key
-	delete(testNotification.SObject.Fields, "LastModifiedDate")
-
-	key, err = createKey(testNotification)
-	if err != nil {
-		t.Errorf("Error creating RabbitMQ routing key: %s", err)
-	}
-
-	if key != "testtype" {
-		t.Errorf("Expected routing key testtype, got: %v", key)
 	}
 }
 
