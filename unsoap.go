@@ -31,12 +31,10 @@ type notification struct {
 }
 
 func (n *notification) routingKey() (key string, err error) {
-	objectName := n.SObject.Type
-	if len(objectName) == 0 {
+	key = strings.ToLower(n.SObject.Type)
+	if len(key) == 0 {
 		return "", fmt.Errorf("could not create routing key")
 	}
-
-	key = strings.ToLower(objectName)
 
 	action := n.actionType()
 	if len(action) > 0 {
@@ -47,18 +45,23 @@ func (n *notification) routingKey() (key string, err error) {
 }
 
 func (n *notification) actionType() (action string) {
-	objectCreateTime, createErr := parseSalesforceTime(n.SObject.Fields["CreatedDate"])
-	objectModifiedTime, modifiedErr := parseSalesforceTime(n.SObject.Fields["LastModifiedDate"])
+	created, err := parseSfTime(n.SObject.Fields["CreatedDate"])
+	if err != nil {
+		return
+	}
+
+	modified, err := parseSfTime(n.SObject.Fields["LastModifiedDate"])
+	if err != nil {
+		return
+	}
 
 	switch {
-	case createErr != nil || modifiedErr != nil:
-		return ""
-	case objectModifiedTime.Equal(objectCreateTime):
-		return "create"
-	case objectModifiedTime.After(objectCreateTime):
-		return "update"
+	case modified.Equal(created):
+		action = "create"
+	case modified.After(created):
+		action = "update"
 	}
-	return ""
+	return
 }
 
 type sObject struct {
@@ -107,7 +110,7 @@ func unsoap(soap []byte) (notifications []notification, err error) {
 	return notifications, nil
 }
 
-func parseSalesforceTime(timeField interface{}) (t time.Time, err error) {
+func parseSfTime(timeField interface{}) (t time.Time, err error) {
 	if timeField == nil {
 		return time.Now(), fmt.Errorf("no time found")
 	}
