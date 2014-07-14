@@ -12,21 +12,21 @@ type message struct {
 }
 
 type notifications struct {
-	OrganizationId   string
-	ActionId         string
-	SessionId        string
-	EnterpriseUrl    string
-	PartnerUrl       string
+	OrganizationID   string         `xml:"OrganizationId"`
+	ActionID         string         `xml:"ActionId"`
+	SessionID        string         `xml:"SessionId"`
+	EnterpriseURL    string         `xml:"EnterpriseUrl"`
+	PartnerURL       string         `xml:"PartnerUrl"`
 	NotificationList []notification `xml:"Notification"`
 }
 
 type notification struct {
-	Id             string
-	OrganizationId string
-	ActionId       string
-	SessionId      string
-	EnterpriseUrl  string
-	PartnerUrl     string
+	ID             string  `xml:"Id" json:"Id"`
+	OrganizationID string  `json:"OrganizationId"`
+	ActionID       string  `json:"ActionId"`
+	SessionID      string  `json:"SessionId"`
+	EnterpriseURL  string  `json:"EnterpriseUrl"`
+	PartnerURL     string  `json:"PartnerUrl"`
 	SObject        sObject `xml:"sObject"`
 }
 
@@ -101,8 +101,8 @@ func unsoap(soap []byte) (notifications []notification, err error) {
 
 	n := msg.Notifications
 	for _, nt := range n.NotificationList {
-		nt.OrganizationId, nt.ActionId, nt.SessionId = n.OrganizationId, n.ActionId, n.SessionId
-		nt.EnterpriseUrl, nt.PartnerUrl = n.EnterpriseUrl, n.PartnerUrl
+		nt.OrganizationID, nt.ActionID, nt.SessionID = n.OrganizationID, n.ActionID, n.SessionID
+		nt.EnterpriseURL, nt.PartnerURL = n.EnterpriseURL, n.PartnerURL
 		nt.SObject.populateFieldValues()
 		notifications = append(notifications, nt)
 	}

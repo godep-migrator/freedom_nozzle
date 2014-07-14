@@ -13,15 +13,15 @@ func Test_UnsoapNotificationValues(t *testing.T) {
 
 	n := result[0]
 
-	if n.Id != "04lo00000" {
+	if n.ID != "04lo00000" {
 		t.Error("Expected notification id to match input")
 	}
 
-	if n.OrganizationId != "00Do00" {
+	if n.OrganizationID != "00Do00" {
 		t.Error("Expected organization id to match input")
 	}
 
-	if n.PartnerUrl != "https://nax.salesforce.com/etc" {
+	if n.PartnerURL != "https://nax.salesforce.com/etc" {
 		t.Error("Expected partnerurl to match input")
 	}
 }
@@ -57,8 +57,8 @@ func Test_UnsoapMultipleNotificationValues(t *testing.T) {
 	}
 
 	firstResult := result[0]
-	if firstResult.Id != "04lo00000x" {
-		t.Errorf("Expected first notification id to be 04lo00000x, got: %s", firstResult.Id)
+	if firstResult.ID != "04lo00000x" {
+		t.Errorf("Expected first notification id to be 04lo00000x, got: %s", firstResult.ID)
 	}
 
 	firstResultSObjID := firstResult.SObject.Fields["Id"]
@@ -67,8 +67,8 @@ func Test_UnsoapMultipleNotificationValues(t *testing.T) {
 	}
 
 	secondResult := result[1]
-	if secondResult.Id != "04lo00000y" {
-		t.Errorf("Expected second notification id to be 04lo00000y, got: %s", secondResult.Id)
+	if secondResult.ID != "04lo00000y" {
+		t.Errorf("Expected second notification id to be 04lo00000y, got: %s", secondResult.ID)
 	}
 
 	secondResultSObjID := secondResult.SObject.Fields["Id"]
