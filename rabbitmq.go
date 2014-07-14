@@ -31,7 +31,7 @@ func newRabbitMQConnection(server string) *amqp.Connection {
 	return connection
 }
 
-func publishMessage(n notification) (err error) {
+func publishMessage(n *notification) (err error) {
 	msg, err := createMessage(n)
 	if err != nil {
 		return
@@ -46,7 +46,7 @@ func publishMessage(n notification) (err error) {
 	return
 }
 
-func createMessage(n notification) (msg amqp.Publishing, err error) {
+func createMessage(n *notification) (msg amqp.Publishing, err error) {
 	json, err := json.Marshal(n)
 	if err != nil {
 		return amqp.Publishing{}, err

@@ -27,7 +27,7 @@ func Test_PublishMessage(t *testing.T) {
 		t.Fatalf("Could not test RabbitMQ publish: %s", err)
 	}
 
-	err = publishMessage(testNotification)
+	err = publishMessage(&testNotification)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -47,7 +47,7 @@ func Test_PublishMessage(t *testing.T) {
 }
 
 func Test_CreateMessage(t *testing.T) {
-	msg, err := createMessage(testNotification)
+	msg, err := createMessage(&testNotification)
 	if err != nil {
 		t.Errorf("Error creating RabbitMQ message: %s", err)
 	}

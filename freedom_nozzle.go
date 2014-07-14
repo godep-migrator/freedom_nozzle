@@ -42,7 +42,7 @@ func handleOutboundMessage(c web.C, w http.ResponseWriter, r *http.Request) {
 
 		if isNew {
 			notificationIds = append(notificationIds, n.ID)
-			err = publishMessage(n)
+			err = publishMessage(&n)
 		}
 	}
 
