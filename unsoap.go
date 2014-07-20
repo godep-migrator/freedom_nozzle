@@ -93,7 +93,7 @@ type sObjectField struct {
 
 func unsoap(soap []byte) (notifications []notification, err error) {
 	msg := &message{}
-	xml.Unmarshal([]byte(soap), msg)
+	xml.Unmarshal(soap, msg)
 
 	if len(msg.Notifications.NotificationList) < 1 {
 		return nil, fmt.Errorf("message contains no notifications")
